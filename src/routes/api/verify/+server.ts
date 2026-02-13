@@ -1,8 +1,12 @@
-import { ENABLE_WORKER_PROXY, WORKER_PROXY_TOKEN, WORKER_PROXY_URL } from '$env/static/private';
 import type { RequestEvent } from './$types';
 import { Buffer } from 'node:buffer';
 
 const BASE_URL = 'https://eu-west-1.faceassure.com';
+
+// Environment variables (fallback to process.env for local dev)
+const ENABLE_WORKER_PROXY = process.env.ENABLE_WORKER_PROXY ?? '';
+const WORKER_PROXY_TOKEN = process.env.WORKER_PROXY_TOKEN ?? '';
+const WORKER_PROXY_URL = process.env.WORKER_PROXY_URL ?? '';
 
 const jsonResponse = (body: unknown, status: number = 200, extraHeaders: object = {}) =>
 	new Response(JSON.stringify(body), {
