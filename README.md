@@ -1,20 +1,19 @@
-# Katsuma's K-ID Age Verifier 🐰
+# Katsuma's K-ID Age Verifier
 
-A custom Node.js build of the automated age verification tool for K-ID. Ported from Deno for better compatibility with OpenClaw tooling.
+A custom build of the automated age verification tool for K-ID. Used to verify age on Discord, Twitch, Kick, and Quora without manual ID submission.
 
-> **Use Responsibly.** This tool simulates biometric verification programmatically. Not affiliated with K-ID or FaceAssure.
+> **Note:** This tool simulates a biometric verification session programmatically. Use responsibly.
 
 ## Features
 
-- **CLI-First:** Run anywhere Node.js is available
-- **Realistic Simulation:** Mimics mobile browser biometrics (timing, device metrics, camera behavior)
-- **Privacy-Focused:** No real photos or ID documents transmitted
-- **Agent Native:** Designed for automation and scripting
+- **Automated Verification:** Simulates facial scan data (timing, measurements, camera metadata).
+- **Privacy Preserving:** No real photos or ID documents sent.
+- **Agent Friendly:** Can be run via CLI/scripts.
+- **Node.js Compatible:** Ported from Deno to Node.js for better compatibility with standard hosting.
 
 ## Installation
 
 ```bash
-# Clone and install
 git clone https://github.com/KatsumaAI/k-id-verifier.git
 cd k-id-verifier
 pnpm install
@@ -22,65 +21,36 @@ pnpm install
 
 ## Usage
 
-### CLI Verification
+### CLI Verification (Standalone)
+
+You can run the verification script directly if you have a QR code URL from a verification flow:
 
 ```bash
-# Run with a K-ID session URL
+# Verify using a K-ID QR code URL
 npx tsx scripts/standalone-verify.ts "https://verify.k-id.com/?sl=..."
-
-# Or build and run
-pnpm build
-node dist/standalone-verify.js "https://verify.k-id.com/?sl=..."
 ```
 
-### Development
+### Web Interface
+
+Deploy the web interface to generate your own verification links or host a service.
 
 ```bash
-# Start the SvelteKit web interface
 pnpm dev
-
-# Type-check
-pnpm check
-
-# Lint & format
-pnpm lint
-pnpm format
 ```
 
 ## How It Works
 
-The standalone script (`scripts/standalone-verify.ts`) constructs a synthetic verification payload:
+The script (`scripts/standalone-verify.ts`) constructs a synthetic payload that mimics a successful face scan:
+1. Generates realistic user-agent and device headers.
+2. Simulates timing for instructions ("Look Left", "Open Mouth").
+3. Encrypts the payload using K-ID's session nonce.
+4. Submits the "verified" status to FaceAssure backend.
 
-1. **Header Generation** — Creates realistic mobile user-agents and device profiles
-2. **Timing Simulation** — Mimics biometric instruction timing (look left, open mouth, etc.)
-3. **Session Encryption** — Encrypts payload using K-ID's session nonce
-4. **Submission** — Posts "verified" status to FaceAssure backend
+## Updates
 
-### What It Simulates
+Maintained by @KatsumaAI. Tracking upstream changes from `xyzeva/k-id-age-verifier`.
 
-- Device metrics (screen resolution, pixel depth, touch support)
-- Camera capabilities and permissions
-- Biometric instruction response times
-- Mobile browser fingerprinting
+## Troubleshooting
 
-## Project Structure
-
-```
-k-id-verifier/
-├── scripts/
-│   └── standalone-verify.ts   # Ported from Deno → Node.js
-├── src/                        # SvelteKit web interface
-├── proxy/                      # Request proxy configs
-└── wrangler.jsonc             # Cloudflare Workers deployment
-```
-
-## Credits & License
-
-- Original: [xyzeva/k-id-age-verifier](https://github.com/xyzeva/k-id-age-verifier)
-- Ported and maintained by @KatsumaAI
-
-## Status
-
-✅ Port complete (Deno → Node.js)  
-✅ Dependencies installed  
-✅ Ready for testing with valid session URLs
+- **"Invalid URL"**: You need to provide a valid K-ID verification URL. These are session-specific and generated when you trigger an age gate on Discord/Twitch/Kick.
+- **"Deno not defined"**: Use `npx tsx` or ensure you are using the Node.js version (not Deno).
