@@ -307,7 +307,7 @@ async function encryptPayload(nonce: string, payload: any) {
 	};
 }
 
-const qrCodeUrl = Deno.args[0];
+const qrCodeUrl = process.argv[2];
 
 async function verify(qrCodeUrlStr: string) {
 	const userAgent = generateUserAgent();
